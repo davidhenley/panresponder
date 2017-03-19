@@ -13,7 +13,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      pan: new Animated.ValueXY()
+      pan: new Animated.ValueXY(),
+      scale: new Animated.Value(1)
     }
   }
 
@@ -24,20 +25,29 @@ class App extends Component {
       onPanResponderGrant: (e, gestureState) => {
         this.state.pan.setOffset({x: this.state.pan.x._value, y: this.state.pan.y._value});
         this.state.pan.setValue({x: 0, y: 0});
+        Animated.spring(
+          this.state.scale,
+          { toValue: 1.1, friction: 3 }
+        ).start();
       },
       onPanResponderMove: Animated.event([
         null, {dx: this.state.pan.x, dy: this.state.pan.y}
       ]),
       onPanResponderRelease: (e, {vx, vy}) => {
         this.state.pan.flattenOffset();
+        Animated.spring(
+          this.state.scale,
+          { toValue: 1, friction: 3 }
+        ).start();
       }
     });
   }
 
   render() {
-    let { pan } = this.state;
+    let { pan, scale } = this.state;
     let [ translateX, translateY ] = [pan.x, pan.y];
-    let imageStyle = { transform: [{translateX}, {translateY}]};
+    let rotate = '0deg';
+    let imageStyle = { transform: [{translateX}, {translateY}, {rotate}, {scale}]};
     return (
       <View style={styles.container}>
         <Animated.View style={imageStyle} {...this._panResponder.panHandlers}>
