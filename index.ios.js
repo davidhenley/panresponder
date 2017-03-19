@@ -1,31 +1,34 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Image,
+  PanResponder,
+  Animated
 } from 'react-native';
 
-export default class panresponder extends Component {
+class App extends Component {
+  componentWillMount() {
+    this._panResponder = PanResponder.create({
+      onMoveShouldSetResponderCapture: () => true,
+      onMoveShouldSetPanResponderCapture: () => true,
+      onPanResponderGrant: (e, gestureState) => {
+      },
+      onPanResponderMove: Animated.event([
+      ]),
+      onPanResponderRelease: (e, {vx, vy}) => {
+      }
+    });
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
+        <Animated.View {...this._panResponder.panHandlers}>
+          <Image source={require('./assets/target.png')} />
+        </Animated.View>
       </View>
     );
   }
@@ -35,19 +38,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    alignItems: 'center'
+  }
 });
 
-AppRegistry.registerComponent('panresponder', () => panresponder);
+AppRegistry.registerComponent('panresponder', () => App);
